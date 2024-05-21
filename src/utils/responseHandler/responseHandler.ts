@@ -1,5 +1,5 @@
-import delay from '../delay/delay';
-import { IResponseHandlerProps, SERVICE_MODE } from './responseHandler.type';
+import delay from "../delay/delay";
+import { IResponseHandlerProps, SERVICE_MODE } from "./responseHandler.type";
 
 const responseHandler = async <T>({
   callback,
@@ -9,7 +9,7 @@ const responseHandler = async <T>({
   const serviceMode = process.env.NEXT_PUBLIC_SERVICE_MODE as SERVICE_MODE;
 
   if (serviceMode === SERVICE_MODE.MOCK || isMock)
-    return await delay<T>({ data: mock });
+    return await delay<T>({ data: mock, ms: 500 });
 
   return (await callback())?.data;
 };

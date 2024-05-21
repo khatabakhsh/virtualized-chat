@@ -7,6 +7,7 @@ import {
   ResizablePanel,
   ResizablePanelGroup,
 } from "@/components/ui/resizable";
+import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/utils/cn";
 import { setInCookie } from "@/utils/cookies";
 import { useEffect, useState } from "react";
@@ -24,14 +25,14 @@ export function ChatLayout({
   defaultCollapsed = false,
   navCollapsedSize,
 }: ChatLayoutProps) {
-  const messagesQuery = useGetContactsApi();
+  const contactsQuery = useGetContactsApi();
 
   const [isCollapsed, setIsCollapsed] = useState(defaultCollapsed);
   const [selectedUser, setSelectedUser] = useState<Contact>();
 
   useEffect(() => {
-    messagesQuery.isSuccess && setSelectedUser(messagesQuery.data?.data?.[0]);
-  }, [messagesQuery.isSuccess]);
+    contactsQuery.isSuccess && setSelectedUser(contactsQuery.data?.data?.[0]);
+  }, [contactsQuery.isSuccess]);
 
   const [isMobile, setIsMobile] = useState(false);
 
@@ -60,7 +61,7 @@ export function ChatLayout({
       }}
       className="h-full items-stretch"
     >
-      {messagesQuery.data?.data && selectedUser && (
+      {contactsQuery.data?.data && selectedUser ? (
         <>
           <ResizablePanel
             defaultSize={defaultLayout[0]}
@@ -83,7 +84,7 @@ export function ChatLayout({
           >
             <Sidebar
               isCollapsed={isCollapsed || isMobile}
-              links={messagesQuery.data?.data?.map((user) => ({
+              links={contactsQuery.data?.data?.map((user) => ({
                 name: user.name,
                 messages: user.messages ?? [],
                 avatar: user.avatar,
@@ -102,6 +103,8 @@ export function ChatLayout({
             />
           </ResizablePanel>
         </>
+      ) : (
+        <Skeleton className="w-full h-full" />
       )}
     </ResizablePanelGroup>
   );
